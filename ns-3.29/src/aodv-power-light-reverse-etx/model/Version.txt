@@ -1,0 +1,2 @@
+AODV - Power Light ETX metric 1B but based only on LPP reverse count
+LPP packets do not contain list of neighbor nodes, just ID, source IP and seq no.

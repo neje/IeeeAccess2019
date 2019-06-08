@@ -1,0 +1,14 @@
+Version 1.0
+
+- Completely new neighbor list is created for etx calculations.
+- LPP packets are sent on 1s(default) and contain list of all neighbors with forward LLP count > 0.
+- Reverse LPP (LPPr) count is calculated by counting LPP packet from neigbors in 10s period.
+- Forward LPP (LPPf) count is obtained from received LPP packet. Node that receive LPP searches for its address in LPP and gets matching LPP count (if exists). 
+- Etx metric is calculated based on forward and reverse LPP counts in 10s period:
+     ETX = 1 / (LPPf/10 * LPPr/10).
+- Valid values of ETX for one link are: 1, 1.11, 1.24, 1.25, 1.39, ...20, 25, 33.33, 50, 100.
+- Minimum  value of ETX is 1, and maximum is 100 (in the case that only one of 10 LPPs is received). If there is no connection between nodes then ETX -> oo.
+- When searching for a new route, ETX metric is transferred over the network in RREQ and RREP packets. Along the route ETX is calculated as a summ of ETX for every link on the route. 
+- ETX metric is 4B long field (uint32_t). Trerefore maximum value of ETX is maxium value of the type uint32_t, aproximatly 4*10^9. 
+- Since ETX metric is saved and transfered over the network as an integer value, rounding to nearest integer value must take plase. Before rounding to nearest integer, ETX value is multiplied by 10^4 in order to keep resolution of 4 dacimal placess.
+
