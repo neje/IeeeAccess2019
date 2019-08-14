@@ -118,12 +118,12 @@ RoutingExperiment::WriteToSummaryFile (RunSummary srs)
   if (m_rngRun == m_startRngRun)
     {
       out.open ((m_csvFileNamePrefix + "-Summary.csv").c_str (), std::ofstream::out | std::ofstream::trunc);
-      out << "Rng Run, Number of Flows, Throughput [bps],, Tx Packets,, Rx Packets,, Lost Packets,, Lost Ratio [%],, PHY Tx Packets,, Useful Traffic Ratio [%],,"
+      out << "Rng Run, Number of Flows, Throughput [bps],, Tx Packets,, Rx Packets,, Lost Packets,, Packet Lost Ratio [%],, Packet Delivery Ratio [%],, PHY Tx Packets,, Useful Traffic Ratio [%],,"
           << "E2E Delay Min [ms],, E2E Delay Max [ms],, E2E Delay Average [ms],, E2E Delay Median Estimate [ms],, E2E Delay Jitter [ms]"
           << std::endl;
       out << ", , all flows avg, all packets avg, all flows avg, all packets avg, all flows avg, all packets avg, all flows avg, all packets avg, all flows avg, all packets avg"
           << "  , all flows avg, all packets avg, all flows avg, all packets avg, all flows avg, all packets avg, all flows avg, all packets avg, all flows avg, all packets avg"
-          << "  , all flows avg, all packets avg, all packets avg, all packets avg"
+          << "  , all flows avg, all packets avg, all packets avg, all packets avg, all packets avg, all packets avg"
           << std::endl;
     }
   else
@@ -136,6 +136,7 @@ RoutingExperiment::WriteToSummaryFile (RunSummary srs)
       << srs.aaf.rxPackets << "," << srs.aap.rxPackets << ","
       << srs.aaf.lostPackets << "," << srs.aap.lostPackets << ","
       << srs.aaf.lostRatio << ","<< srs.aap.lostRatio << ","
+      << 100.0 - srs.aaf.lostRatio << ","<< 100.0 - srs.aap.lostRatio << ","
       << "," << srs.aap.phyTxPkts << ","
       << "," << srs.aap.usefullNetTraffic << ","
       << srs.aaf.e2eDelayMin * 1000.0 << "," << srs.aap.e2eDelayMin * 1000.0 << ","
@@ -158,13 +159,13 @@ RoutingExperiment::WriteToSummaryFile (RunSummary srs)
                     << "=MIN(J3:J" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MIN(K3:K" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MIN(L3:L" << m_stopRngRun - m_startRngRun + 3 << "),"
-                    << ","
-//                    << "=MIN(M3:M" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << "=MIN(M3:M" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MIN(N3:N" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << ","
 //                    << "=MIN(O3:O" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MIN(P3:P" << m_stopRngRun - m_startRngRun + 3 << "),"
-                    << "=MIN(Q3:Q" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << ","
+//                    << "=MIN(Q3:Q" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MIN(R3:R" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MIN(S3:S" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MIN(T3:T" << m_stopRngRun - m_startRngRun + 3 << "),"
@@ -173,7 +174,9 @@ RoutingExperiment::WriteToSummaryFile (RunSummary srs)
                     << "=MIN(W3:W" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MIN(X3:X" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MIN(Y3:Y" << m_stopRngRun - m_startRngRun + 3 << "),"
-                    << "=MIN(Z3:Z" << m_stopRngRun - m_startRngRun + 3 << ")"
+                    << "=MIN(Z3:Z" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << "=MIN(AA3:AA" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << "=MIN(AB3:AB" << m_stopRngRun - m_startRngRun + 3 << ")"
                     << std::endl;
       out << "," << "Max,"
                     << "=MAX(C3:C" << m_stopRngRun - m_startRngRun + 3 << "),"
@@ -186,13 +189,13 @@ RoutingExperiment::WriteToSummaryFile (RunSummary srs)
                     << "=MAX(J3:J" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MAX(K3:K" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MAX(L3:L" << m_stopRngRun - m_startRngRun + 3 << "),"
-                    << ","
-//                    << "=MAX(M3:M" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << "=MAX(M3:M" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MAX(N3:N" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << ","
 //                    << "=MAX(O3:O" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MAX(P3:P" << m_stopRngRun - m_startRngRun + 3 << "),"
-                    << "=MAX(Q3:Q" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << ","
+//                    << "=MAX(Q3:Q" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MAX(R3:R" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MAX(S3:S" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MAX(T3:T" << m_stopRngRun - m_startRngRun + 3 << "),"
@@ -201,7 +204,9 @@ RoutingExperiment::WriteToSummaryFile (RunSummary srs)
                     << "=MAX(W3:W" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MAX(X3:X" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MAX(Y3:Y" << m_stopRngRun - m_startRngRun + 3 << "),"
-                    << "=MAX(Z3:Z" << m_stopRngRun - m_startRngRun + 3 << ")"
+                    << "=MAX(Z3:Z" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << "=MAX(AA3:AA" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << "=MAX(AB3:AB" << m_stopRngRun - m_startRngRun + 3 << ")"
                     << std::endl;
       out << "," << "Average,"
                     << "=AVERAGE(C3:C" << m_stopRngRun - m_startRngRun + 3 << "),"
@@ -214,13 +219,13 @@ RoutingExperiment::WriteToSummaryFile (RunSummary srs)
                     << "=AVERAGE(J3:J" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=AVERAGE(K3:K" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=AVERAGE(L3:L" << m_stopRngRun - m_startRngRun + 3 << "),"
-                    << ","
-//                    << "=AVERAGE(M3:M" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << "=AVERAGE(M3:M" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=AVERAGE(N3:N" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << ","
 //                    << "=AVERAGE(O3:O" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=AVERAGE(P3:P" << m_stopRngRun - m_startRngRun + 3 << "),"
-                    << "=AVERAGE(Q3:Q" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << ","
+//                    << "=AVERAGE(Q3:Q" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=AVERAGE(R3:R" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=AVERAGE(S3:S" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=AVERAGE(T3:T" << m_stopRngRun - m_startRngRun + 3 << "),"
@@ -229,7 +234,9 @@ RoutingExperiment::WriteToSummaryFile (RunSummary srs)
                     << "=AVERAGE(W3:W" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=AVERAGE(X3:X" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=AVERAGE(Y3:Y" << m_stopRngRun - m_startRngRun + 3 << "),"
-                    << "=AVERAGE(Z3:Z" << m_stopRngRun - m_startRngRun + 3 << ")"
+                    << "=AVERAGE(Z3:Z" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << "=AVERAGE(AA3:AA" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << "=AVERAGE(AB3:AB" << m_stopRngRun - m_startRngRun + 3 << ")"
                     << std::endl;
       out << "," << "Median,"
                     << "=MEDIAN(C3:C" << m_stopRngRun - m_startRngRun + 3 << "),"
@@ -242,13 +249,13 @@ RoutingExperiment::WriteToSummaryFile (RunSummary srs)
                     << "=MEDIAN(J3:J" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MEDIAN(K3:K" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MEDIAN(L3:L" << m_stopRngRun - m_startRngRun + 3 << "),"
-                    << ","
-//                    << "=MEDIAN(M3:M" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << "=MEDIAN(M3:M" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MEDIAN(N3:N" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << ","
 //                    << "=MEDIAN(O3:O" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MEDIAN(P3:P" << m_stopRngRun - m_startRngRun + 3 << "),"
-                    << "=MEDIAN(Q3:Q" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << ","
+//                    << "=MEDIAN(Q3:Q" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MEDIAN(R3:R" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MEDIAN(S3:S" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MEDIAN(T3:T" << m_stopRngRun - m_startRngRun + 3 << "),"
@@ -257,7 +264,9 @@ RoutingExperiment::WriteToSummaryFile (RunSummary srs)
                     << "=MEDIAN(W3:W" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MEDIAN(X3:X" << m_stopRngRun - m_startRngRun + 3 << "),"
                     << "=MEDIAN(Y3:Y" << m_stopRngRun - m_startRngRun + 3 << "),"
-                    << "=MEDIAN(Z3:Z" << m_stopRngRun - m_startRngRun + 3 << ")"
+                    << "=MEDIAN(Z3:Z" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << "=MEDIAN(AA3:AA" << m_stopRngRun - m_startRngRun + 3 << "),"
+                    << "=MEDIAN(AB3:AB" << m_stopRngRun - m_startRngRun + 3 << ")"
                     << std::endl;
       out << "," << "Std. deviation,"
                     << "=STDEV(C3:C" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
@@ -270,13 +279,13 @@ RoutingExperiment::WriteToSummaryFile (RunSummary srs)
                     << "=STDEV(J3:J" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
                     << "=STDEV(K3:K" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
                     << "=STDEV(L3:L" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
-                    << ","
-//                    << "=STDEV(M3:M" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
+                    << "=STDEV(M3:M" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
                     << "=STDEV(N3:N" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
                     << ","
 //                    << "=STDEV(O3:O" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
                     << "=STDEV(P3:P" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
-                    << "=STDEV(Q3:Q" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
+                    << ","
+//                    << "=STDEV(Q3:Q" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
                     << "=STDEV(R3:R" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
                     << "=STDEV(S3:S" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
                     << "=STDEV(T3:T" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
@@ -285,7 +294,9 @@ RoutingExperiment::WriteToSummaryFile (RunSummary srs)
                     << "=STDEV(W3:W" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
                     << "=STDEV(X3:X" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
                     << "=STDEV(Y3:Y" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
-                    << "=STDEV(Z3:Z" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << ")"
+                    << "=STDEV(Z3:Z" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
+                    << "=STDEV(AA3:AA" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << "),"
+                    << "=STDEV(AB3:AB" << m_stopRngRun - m_startRngRun + 3 << ")/" << "SQRT(" << m_stopRngRun - m_startRngRun + 1 << ")"
                     << std::endl;
     }
   out.close ();
@@ -301,7 +312,7 @@ RoutingExperiment::Run (int argc, char **argv)
 
   //  Packet::EnablePrinting ();
 
-  uint32_t nNodes = 200; // number of nodes
+  uint32_t nNodes = 50; // number of nodes
   uint32_t nSources = 10; // number of source nodes for application traffic (number of sink nodes is the same in this example)
 
   double simulationDuration = 600.0; // in seconds
