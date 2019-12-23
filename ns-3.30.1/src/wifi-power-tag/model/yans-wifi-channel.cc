@@ -126,6 +126,13 @@ void
 YansWifiChannel::Receive (Ptr<YansWifiPhy> phy, Ptr<Packet> packet, double rxPowerDbm, Time duration)
 {
   NS_LOG_FUNCTION (phy << packet << rxPowerDbm << duration.GetSeconds ());
+  // Do no further processing if signal is too weak
+  // Current implementation assumes constant rx power over the packet duration
+  if ((rxPowerDbm + phy->GetRxGain ()) < phy->GetRxSensitivity ())
+    {
+      NS_LOG_INFO ("Received signal too weak to process: " << rxPowerDbm << " dBm");
+      return;
+    }
   RxPowerTag rxPowerTag;
   bool z = packet->PeekPacketTag (rxPowerTag);
   if (z == false) 
@@ -140,7 +147,7 @@ YansWifiChannel::Receive (Ptr<YansWifiPhy> phy, Ptr<Packet> packet, double rxPow
    rxPowerTag.SetHops (rxPowerTag.GetHops () + 1);
    packet->ReplacePacketTag (rxPowerTag);
   }
-  phy->StartReceivePreambleAndHeader (packet, DbmToW (rxPowerDbm + phy->GetRxGain ()), duration);
+  phy->StartReceivePreamble (packet, DbmToW (rxPowerDbm + phy->GetRxGain ()), duration);
 }
 
 std::size_t
